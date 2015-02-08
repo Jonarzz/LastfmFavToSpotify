@@ -3,7 +3,6 @@ package lastfm;
 public class SonglistMaker {
 	
 	static final String SPOTIFY_TRACK = "spotify:track:";
-	static final String SONG_LIST_CODE = "candyStriped tracklist"; // if there is not such code in tested page's code, user has no favourite tracks
 	static final String USER_NOT_FOUND = "User not found";
 	
 	private String pageContent;
@@ -26,7 +25,7 @@ public class SonglistMaker {
 	
 	private boolean userHasFavouriteTracks() {
 		
-		return pageContent.contains(SONG_LIST_CODE);
+		return pageContent.contains(SPOTIFY_TRACK);
 		
 	}
 	
@@ -34,7 +33,7 @@ public class SonglistMaker {
 		
 		String songID = "";
 		
-		while (pageContent.charAt(actualCopyingPosition) != '"')
+		while (pageContent.charAt(actualCopyingPosition) != '"') // while loop stops when end of Spotify ID ends
 			songID += pageContent.charAt(actualCopyingPosition++);
 		
 		actualSearchingPosition = actualCopyingPosition;

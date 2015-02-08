@@ -1,13 +1,17 @@
 package main;
 
-import lastfm.*;
+import lastfm.MultiplePagesHandler;
+import gui.*;
 
 public class LastfmFavToSpotify {
 
 	public static void main(String[] args) {
 		
-		MultiplePagesHandler multiplePagesHandler = new MultiplePagesHandler();
-		multiplePagesHandler.getSonglistsFromAllPages();
+		GUIView theView = new GUIView();
+		MultiplePagesHandler theModel = new MultiplePagesHandler();
+		GUIController theController = new GUIController(theView, theModel);
+		
+		theView.setVisible(true);
 		
 	}
 

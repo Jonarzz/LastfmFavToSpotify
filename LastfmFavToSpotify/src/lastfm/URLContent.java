@@ -7,8 +7,7 @@ public class URLContent {
 	
 	static final String DEFAULT_URL_BEGINNING = "http://www.last.fm/user/";
 	static final String DEFAULT_URL_ENDING = "/library/loved?sortBy=date&sortOrder=desc&page=";
-	static final String NEXT_PAGE = "Next page"; // if there is no such code in tested page's code, 
-												// the program reached the last page of favourite tracks list
+	static final String NEXT_PAGE = "Next page"; // if there is no such string in the tested page's code, the program reached the last page of favourite tracks list
 
 	private String username;
 	private String usedURL;	

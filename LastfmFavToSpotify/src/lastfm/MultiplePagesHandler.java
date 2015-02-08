@@ -1,15 +1,28 @@
+// THE MODEL
 package lastfm;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+import java.util.ArrayList;
 
-public class MultiplePagesHandler {
+import observerPattern.*;
+
+public class MultiplePagesHandler implements Subject {
+	
+	private String songsList;
+	private String username;
+	private int numberOfListedSongs;
+	
+	private boolean errorEncountered;
+	
+	private ArrayList<Observer> observers;
+	
+	public MultiplePagesHandler() {
+		songsList = "";
+		observers = new ArrayList<Observer>();
+	}
 		
 	public void getSonglistsFromAllPages() {
 		
-		String username = "blindlife"; // TODO username input
 		String pageContent;
-		String songsList = "";
 
 		URLContent url = new URLContent(username);
 		SonglistMaker songlistMaker = new SonglistMaker();
@@ -17,33 +30,62 @@ public class MultiplePagesHandler {
 		while (!url.isItLastPage()) {
 			pageContent = url.getPageContent();
 			
-			if (pageContent.isEmpty())
+			if (pageContent.isEmpty()) {
+				errorEncountered = true;
+				notifyObservers("Something went wrong.\nUser not found/connection problems.");
 				return;
+			}
 			
 			songlistMaker.setNewPageContent(pageContent);
 			songsList += songlistMaker.getSongsFromPage();
 			
 			if (!songlistMaker.getHasFavouriteTracks()) {
-				System.out.println("No favourite tracks found.");
+				errorEncountered = true;
+				notifyObservers("No favourite tracks found on LastFM/Spotify.");
 				return;
 			}
 			
 			url.increasePageNumber();
 			url.setNewUrl();
 			
-			System.out.println("Making a list. Checking it twice.\nSongs processed: " + songlistMaker.getNumberOfListedSongs()); // TODO processed XXX songs
+			notifyObservers(songlistMaker.getNumberOfListedSongs());
 		}
 		
-		//TODO list on the screen
-		PrintWriter out = null;
-		try {
-			out = new PrintWriter(username + ".txt");
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+
+	}
+	
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	
+	public String getSongsList() {
+		return songsList;
+	}
 		
-		out.println(songsList);
-		out.close();
+	public int getNumberOfListedSongs() {
+		return numberOfListedSongs;
+	}
+	
+	public boolean getErrorEncountered() {
+		return errorEncountered;
+	}
+
+	public void addObserver(Observer observer) {
+		observers.add(observer);		
+	}
+
+	public void removeObserver(Observer observer) {
+		observers.remove(observer);
+	}
+
+	public void notifyObservers(int numberOfListedSongs) {
+		for (Observer o : observers)	
+			o.update(numberOfListedSongs);
+	}
+	
+	public void notifyObservers(String errorMessage) {
+		for (Observer o : observers)	
+			o.update(errorMessage);
 	}
 	
 }
