@@ -45,12 +45,12 @@ public class URLContent {
 			e.printStackTrace();
 		}
 		catch (FileNotFoundException e) {
-			System.out.println("Page not found."); // TODO w okienku
+			System.out.println("Page not found."); 
 			return "";
 		}
 		catch (IOException e) {
 			System.out.println("An IOException was caught: " + e.getMessage());
-			System.out.println("ERROR"); // TODO w okienku
+			System.out.println("ERROR");
 			e.printStackTrace();
 		}
 		

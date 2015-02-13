@@ -1,6 +1,8 @@
 // THE VIEW
 package gui;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionListener;
 
 import javax.swing.*;
@@ -16,6 +18,7 @@ public class GUIView extends JFrame {
 	private JLabel usernameLabel;
 	
 	private JButton generateButton;
+	private JButton copyToClipboard;
 	
 	private JTextArea listedSongsArea;
 	private JTextArea instructionsArea;
@@ -31,37 +34,83 @@ public class GUIView extends JFrame {
 			e.printStackTrace();
 		}
 		
-		JPanel mainPanel = new JPanel();
-		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setSize(800, 400);
+		this.setSize(600, 400);
 		this.setLocationRelativeTo(null);
 		
 		usernameTextField = new JTextField(10);
-		usernameLabel = new JLabel("Your username");
-		generateButton = new JButton("Generate playlist");
+		usernameTextField.setMaximumSize(new Dimension(100, 23));
+		usernameLabel = new JLabel("Your username", SwingConstants.CENTER);
 		
-		listedSongsArea = new JTextArea(20, 50); // TODO copy to clipbard
+		generateButton = new JButton("Generate playlist");
+		generateButton.setPreferredSize(new Dimension(10, 25));
+		
+		copyToClipboard = new JButton("Copy to clipboard");
+		copyToClipboard.setPreferredSize(new Dimension(10, 25));
+		
+		listedSongsArea = new JTextArea(10, 25);
 		listedSongsArea.setEditable(false);
 		listedSongsArea.setFont(UIManager.getDefaults().getFont("TabbedPane.font"));
 		
 		scrollPane = new JScrollPane(listedSongsArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		
 		instructionsArea = new JTextArea(INSTRUCTIONS, 5, 20);
+		setInstructionsArea();
+		
+		placeElementsOnGUI();
+		
+		this.setTitle(WINDOW_TITLE);
+		this.setResizable(false);
+	}
+	
+	private void setInstructionsArea() {
 		instructionsArea.setOpaque(false);
 		instructionsArea.setEditable(false);
 		instructionsArea.setLineWrap(true);
 		instructionsArea.setHighlighter(null);
 		instructionsArea.setFont(UIManager.getDefaults().getFont("TabbedPane.font"));
+	}
+	
+	private void placeElementsOnGUI() {
 		
-		mainPanel.add(usernameTextField);
-		mainPanel.add(usernameLabel);
-		mainPanel.add(generateButton);
-		mainPanel.add(scrollPane);
-		mainPanel.add(instructionsArea);
+		JPanel mainPanel = new JPanel();
+		mainPanel.setLayout(new BorderLayout(10, 10));
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+		
+		JPanel topPanel = new JPanel();
+		
+		GroupLayout topLayout = new GroupLayout(topPanel);
+		topLayout.setAutoCreateGaps(true);
+		topLayout.setAutoCreateContainerGaps(true);
+		
+		topLayout.setVerticalGroup(topLayout.createSequentialGroup()
+				.addComponent(usernameLabel)
+				.addGroup(topLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+					.addComponent(usernameTextField)
+					.addComponent(generateButton)
+					.addComponent(copyToClipboard)
+				)
+			);
+		
+		topLayout.setHorizontalGroup(topLayout.createSequentialGroup()
+				.addGroup(topLayout.createParallelGroup(GroupLayout.Alignment.CENTER)
+					.addComponent(usernameLabel)
+					.addComponent(usernameTextField)
+				)
+				.addComponent(generateButton)
+				.addComponent(copyToClipboard)
+			);
+		
+
+		topPanel.setLayout(topLayout);
+		
+		mainPanel.add(topPanel, BorderLayout.NORTH);
+		
+		mainPanel.add(scrollPane, BorderLayout.EAST);
+		mainPanel.add(instructionsArea, BorderLayout.CENTER);
 		
 		this.add(mainPanel);
-		this.setTitle(WINDOW_TITLE);
+		
 	}
 	
 	public String getUsername() {
@@ -74,6 +123,10 @@ public class GUIView extends JFrame {
 	
 	public void addGenerateListener(ActionListener listenForGenerateButton) {
 		generateButton.addActionListener(listenForGenerateButton);
+	}
+	
+	public void addCopyToClipboardListener(ActionListener listenForCopyToClipboard) {
+		copyToClipboard.addActionListener(listenForCopyToClipboard);
 	}
 	
 	public void setErrorMessage(String errorMessage) {
