@@ -2,17 +2,13 @@
 package lastfm;
 
 import java.util.ArrayList;
-
 import javax.swing.SwingWorker;
-
 import observerPattern.*;
-
 
 public class MultiplePagesHandler implements Subject {
 	
 	private String songsList;
 	private String username;
-	private int numberOfListedSongs;
 	
 	private boolean errorEncountered;
 	
@@ -39,7 +35,7 @@ public class MultiplePagesHandler implements Subject {
 			URLContent url = new URLContent(username);
 			SonglistMaker songlistMaker = new SonglistMaker();
 			
-			while (!url.isItLastPage()) {
+			while (!url.getItIsLastPage()) {
 				pageContent = url.getPageContent();
 				
 				if (pageContent.isEmpty()) {
@@ -89,15 +85,7 @@ public class MultiplePagesHandler implements Subject {
 	public String getSongsList() {
 		return songsList;
 	}
-		
-	public int getNumberOfListedSongs() {
-		return numberOfListedSongs;
-	}
 	
-	public boolean getErrorEncountered() {
-		return errorEncountered;
-	}
-
 	public void addObserver(Observer observer) {
 		observers.add(observer);		
 	}

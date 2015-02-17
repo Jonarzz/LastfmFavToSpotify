@@ -11,8 +11,15 @@ public class GUIView extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final String WINDOW_TITLE = "LastFM favourites list to Spotify playlist generator";
-	private static final String INSTRUCTIONS = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec finibus nisi, vitae pulvinar neque. Aliquam ullamcorper odio in libero malesuada, sed egestas sapien pretium. Nunc suscipit a mi ut fermentum. Praesent et rutrum urna. Aliquam at mollis nulla. Suspendisse quam nisi, fermentum tempus lorem eu, euismod ultrices nunc. In ultricies, mauris ac porta auctor, purus nisl dapibus leo, vel faucibus augue augue a nunc.";
+	private final String WINDOW_TITLE = "LastFM favourites list to Spotify playlist generator";
+	private final String INSTRUCTIONS = "How to use it?\n\n"
+			+ "1. Type in your LastFM username and click \"Generate playlist\".\n\n"
+			+ "2. Wait (may take up to a few minutes).\n\n"
+			+ "3. Click \"Copy to clipboard\".\n\n"
+			+ "4. In Spotify application create a new playlist.\n\n"
+			+ "5. Open the playlist.\n\n"
+			+ "6. Use keyboard shortcut Ctrl+V to paste the copied playlist.\n\n"
+			+ "7. Done!";
 	
 	private JTextField usernameTextField;
 	private JLabel usernameLabel;
@@ -39,14 +46,14 @@ public class GUIView extends JFrame {
 		this.setLocationRelativeTo(null);
 		
 		usernameTextField = new JTextField(10);
-		usernameTextField.setMaximumSize(new Dimension(100, 23));
+		usernameTextField.setMaximumSize(new Dimension(100, 25));
 		usernameLabel = new JLabel("Your username", SwingConstants.CENTER);
 		
 		generateButton = new JButton("Generate playlist");
-		generateButton.setPreferredSize(new Dimension(10, 25));
+		generateButton.setPreferredSize(new Dimension(100, 25));
 		
 		copyToClipboard = new JButton("Copy to clipboard");
-		copyToClipboard.setPreferredSize(new Dimension(10, 25));
+		copyToClipboard.setPreferredSize(new Dimension(100, 25));
 		
 		listedSongsArea = new JTextArea(10, 25);
 		listedSongsArea.setEditable(false);
@@ -128,10 +135,5 @@ public class GUIView extends JFrame {
 	public void addCopyToClipboardListener(ActionListener listenForCopyToClipboard) {
 		copyToClipboard.addActionListener(listenForCopyToClipboard);
 	}
-	
-	public void setErrorMessage(String errorMessage) {
-		listedSongsArea.setText(errorMessage);
-	}
-
 
 }

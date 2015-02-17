@@ -17,13 +17,13 @@ public class GUIController implements Observer {
 	private MultiplePagesHandler theModel;
 	
 	public GUIController(GUIView theView, MultiplePagesHandler theModel) {
+		
 		this.theView = theView;
 		this.theModel = theModel;
 		
 		this.theView.addGenerateListener(new GenerateListener());
 		this.theView.addCopyToClipboardListener(new CopyToClipboardListener());
-		
-		theModel.addObserver(this);
+
 	}
 	
 	public void update(int numberOfListedSongs) {

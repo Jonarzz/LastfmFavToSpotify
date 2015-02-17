@@ -11,6 +11,7 @@ public class LastfmFavToSpotify {
 		MultiplePagesHandler theModel = new MultiplePagesHandler();
 		
 		GUIController theController = new GUIController(theView, theModel);
+		theModel.addObserver(theController);
 
 		theView.setVisible(true);
 		
