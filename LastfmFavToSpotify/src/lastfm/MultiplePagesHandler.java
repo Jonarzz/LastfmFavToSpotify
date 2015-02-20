@@ -2,16 +2,17 @@
 package lastfm;
 
 import java.util.ArrayList;
-
+import javax.swing.SwingWorker;
 import observerPattern.*;
 
 public class MultiplePagesHandler implements Subject {
 	
 	private String songsList;
 	private String username;
-	private int numberOfListedSongs;
 	
 	private boolean errorEncountered;
+	
+	private String errorMessage;
 	
 	private ArrayList<Observer> observers;
 	
@@ -19,39 +20,62 @@ public class MultiplePagesHandler implements Subject {
 		songsList = "";
 		observers = new ArrayList<Observer>();
 	}
-		
+	
 	public void getSonglistsFromAllPages() {
+		GetSonglists getSonglists = new GetSonglists();
+		getSonglists.execute();
+	}
+	
+	class GetSonglists extends SwingWorker<String, String> {
 		
-		String pageContent;
-
-		URLContent url = new URLContent(username);
-		SonglistMaker songlistMaker = new SonglistMaker();
-		
-		while (!url.isItLastPage()) {
-			pageContent = url.getPageContent();
+		public String doInBackground() throws Exception {
 			
-			if (pageContent.isEmpty()) {
-				errorEncountered = true;
-				notifyObservers("Something went wrong.\nUser not found/connection problems.");
-				return;
+			String pageContent;
+	
+			URLContent url = new URLContent(username);
+			SonglistMaker songlistMaker = new SonglistMaker();
+			
+			while (!url.getItIsLastPage()) {
+				pageContent = url.getPageContent();
+				
+				if (pageContent.isEmpty()) {
+					errorEncountered = true;
+					errorMessage = "Something went wrong.\nUser not found/connection problems.";
+					return "ERROR";
+				}
+				
+				songlistMaker.setNewPageContent(pageContent);
+				songsList += songlistMaker.getSongsFromPage();
+				
+				if (!songlistMaker.getHasFavouriteTracks()) {
+					errorEncountered = true;
+					errorMessage = "No favourite tracks found on LastFM/Spotify.";
+					return "ERROR";
+				}
+				
+				url.increasePageNumber();
+				url.setNewUrl();
+				
+				notifyObservers(songlistMaker.getNumberOfListedSongs());
+				
 			}
 			
-			songlistMaker.setNewPageContent(pageContent);
-			songsList += songlistMaker.getSongsFromPage();
+			return songsList;
 			
-			if (!songlistMaker.getHasFavouriteTracks()) {
-				errorEncountered = true;
-				notifyObservers("No favourite tracks found on LastFM/Spotify.");
-				return;
-			}
-			
-			url.increasePageNumber();
-			url.setNewUrl();
-			
-			notifyObservers(songlistMaker.getNumberOfListedSongs());
 		}
 		
-
+		public void done() {
+			try {
+				if (errorEncountered)
+					notifyObservers(errorMessage);
+				else
+					notifyObservers(songsList);
+			}
+			catch (Exception e) {
+				System.out.println("ERROR");
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public void setUsername(String username) {
@@ -61,15 +85,7 @@ public class MultiplePagesHandler implements Subject {
 	public String getSongsList() {
 		return songsList;
 	}
-		
-	public int getNumberOfListedSongs() {
-		return numberOfListedSongs;
-	}
 	
-	public boolean getErrorEncountered() {
-		return errorEncountered;
-	}
-
 	public void addObserver(Observer observer) {
 		observers.add(observer);		
 	}
@@ -89,4 +105,3 @@ public class MultiplePagesHandler implements Subject {
 	}
 	
 }
-// TODO wyœwietlanie awatarów 

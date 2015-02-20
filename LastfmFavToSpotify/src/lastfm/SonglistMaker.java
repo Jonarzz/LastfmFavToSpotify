@@ -2,8 +2,7 @@ package lastfm;
 
 public class SonglistMaker {
 	
-	static final String SPOTIFY_TRACK = "spotify:track:";
-	static final String USER_NOT_FOUND = "User not found";
+	private final String SPOTIFY_TRACK = "spotify:track:";
 	
 	private String pageContent;
 	
